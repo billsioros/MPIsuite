@@ -1,0 +1,143 @@
+#!/bin/bash
+
+. ui.sh
+. config.sh
+
+
+REQUIRED=( OUTPUT_ROOT USER_ID )
+
+for value in "${REQUIRED[@]}"
+do
+    if [[ -z "${!value// }" ]]
+    then
+        log "ERROR" "'$value' has not been specified"; exit 1
+    fi
+done
+
+PPN=8
+
+function isPowerOfTwo
+{
+    isPowerOfTwo_py="import math; print(false if $1 == 0 else (math.ceil(math.log($1, 2)) == math.floor(math.log($1, 2))))"
+
+    if [ "$( python -c "$isPowerOfTwo_py" )" == "True" ]
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
+if [[ "$*" == *--clean* ]]
+then
+    rm -rfv "$OUTPUT_ROOT"
+
+    find . -name "*.mpiP"  -delete
+    find . -name "*job.sh" -delete
+
+    enqueued="$( qstat | grep "$USER_ID" | grep -oh "^[0-9]*.argo" | tr '\n' ' ' )"
+
+    if [[ ! -z "${enqueued// }" ]]
+    then
+        log "MESSAGE" "Dequeuing jobs [$enqueued]"
+
+        for job in $enqueued
+        do
+            qdel "$job"
+        done
+    fi
+
+    exit 0
+fi
+
+if [ "$#" -lt 2 ]
+then
+    log "ERROR" "usage: $( basename "$0" ) [FILE] [PROCESSES]"; exit 1
+fi
+
+exe="$1"
+
+if [ ! -x "$exe" ]
+then
+    log "ERROR" "'$1' is not executable"; exit 1
+fi
+
+if ! [[ "$2" =~ ^[1-9][0-9]*$ ]] || ! isPowerOfTwo "$2"
+then
+    log "ERROR" "The number of processes must be a power of 2"; exit 1
+fi
+
+args="--mca mca_component_show_load_errors 0"
+
+PROCESSES="$2"
+
+NODES="$(( $PROCESSES / $PPN))"
+
+if [[ "$NODES" -eq 0 ]]
+then
+    NODES=1
+    args="$args –np $PROCESSES"
+fi
+
+job="$( basename $exe )"
+job="${job%.*}"
+job="${job}_${PROCESSES}_${USER_ID}_job"
+
+if [ "$#" -gt 2 ]
+then
+    DIR="${OUTPUT_ROOT}/$3"
+else
+    DIR="${OUTPUT_ROOT}/${PROCESSES}/$( date +"%d_%m_%Y" )/$( date +"%H_%M_%S" )"
+fi
+
+JOB=\
+"#!/bin/bash
+
+# Max VM size #
+#PBS -l pvmem=2G
+
+# Max Wall time #
+#PBS -l walltime=00:01:00
+
+# How many nodes and tasks per node #
+#PBS -l nodes=${NODES}:ppn=${PPN}
+
+# Which Queue to use, DO NOT CHANGE #
+#PBS -q workq
+
+# Job Name #
+#PBS -N $job
+
+# Streams #
+#PBS -o ${DIR}/${job}.stdout
+#PBS -e ${DIR}/${job}.stderr
+
+#Change Working directory to SUBMIT directory
+cd \$PBS_O_WORKDIR
+
+#OpenMP Threads #
+# OMP_NUM_THREADS * ppn should be max 8 (the total number of node cores= 8).
+# To use OpenMPI remember to include -fopenmp in compiler flags in order to activate OpenMP directives.
+export OMP_NUM_THREADS=1
+
+# Run executable #
+mpirun $exe $args
+"
+
+mkdir -p "${DIR}"
+
+echo "$JOB" > "${job}.sh"
+
+id="$( qsub "${job}.sh" )"
+
+echo
+
+if [[ ! -z "${id// }" ]]
+then
+    log "MESSAGE" "name='${job}', id='${id}', ps=${PROCESSES}, ns=${NODES}, ppn=${PPN}"
+
+    echo -e "\n$( qstat )\n"
+else
+    log "ERROR" "Scheduling job '$job' has failed"
+fi
+
