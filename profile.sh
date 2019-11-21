@@ -76,7 +76,7 @@ do
     fi
 done
 
-rm -f "$exe"; find . -name "*job.sh" -delete
+find . -name "*job.sh" -delete
 
 mkdir -p "${OUTPUT_ROOT}/${DIR}/mpiP"; mv *.mpiP  "${OUTPUT_ROOT}/${DIR}/mpiP"
 
