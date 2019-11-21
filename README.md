@@ -51,7 +51,7 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
 Let' s assume we would like to estimate the integral from a to b of an equation f(x) using the trapezoidal rule.
 
-Let' s also assume that we have already developed an **MPI** program, named **mpi_trap.c** to do so and this program defines a macro named **nTraps**, which corresponds to the **number of trapezoids** that are going to be used in the calculation of the integral.
+Let' s also assume that we have already developed an **MPI** program, named **mpi_trap1.c** to do so and this program defines a macro named **nTraps**, which corresponds to the **number of trapezoids** that are going to be used in the calculation of the integral.
 
 Firstly, we need to source [setup.sh](setup.sh) like so
 
@@ -61,12 +61,12 @@ Firstly, we need to source [setup.sh](setup.sh) like so
 
 We now need to compile our source file using [compile.sh](compile.sh) as follows
 
-    ./compile.sh mpi_trap.c nTraps 512
+    ./compile.sh mpi_trap1.c nTraps 512
 
     [compile.sh] enable profiling: y
     [compile.sh] link OpenMP: n
 
-This results in the creation of an executable file named **mpi_trap.x**.
+This results in the creation of an executable file named **mpi_trap1.x**.
 
 Executing [compile.sh](compile.sh) with the _--clean_ option deletes the executable.
 
@@ -74,7 +74,7 @@ Executing [compile.sh](compile.sh) with the _--clean_ option deletes the executa
 
 Scheduling the executable can be achieved like so
 
-    ./schedule.sh mpi_trap.x 16
+    ./schedule.sh mpi_trap1.x 16
 
     [schedule.sh] name='mpi_trap1_16_argo059_job', id='14524.argo', ps=16, ns=2, ppn=8
 
@@ -119,7 +119,7 @@ done
 
 We can compile the source file with different numbers of trapezoids defined and schedule it with different numbers of processes in a single command as follows
 
-    echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap.c ./description.sh
+    echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap1.c ./description.sh
 
 The _echo_ command is used so that [compile.sh](compile.sh) runs non-interactively.
 
