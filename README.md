@@ -35,8 +35,8 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
 The profiler is expecting a profiling description, which must define:
 
-* a variable name **MACRO**, containing the name of the macro to be defined when running the profiler.
-* an array named **VALUES**, containing the values that the macro should receive.
+* a variable name **MACRO**, containing the name of the macro to be defined by [compile.sh](./compile.sh).
+* an array named **VALUES**, containing the values that the macro **MACRO** should receive.
 
 ## **Configuration**
 
