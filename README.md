@@ -33,9 +33,9 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
 ## **Profiling Descriptions**
 
-[profile.sh](./profile.sh) is expecting a profiling description, which must define:
+[profile.sh](./profile.sh) is expecting a profiling description, which **must** define:
 
-* a string named **MACRO**, containing the name of the macro that should be be defined by [compile.sh](./compile.sh).
+* a string named **MACRO**, containing the name of the macro that should be defined by [compile.sh](./compile.sh).
 * an array named **VALUES**, containing the values that macro **MACRO** should receive in different runs.
 
 ## **Configuration**
