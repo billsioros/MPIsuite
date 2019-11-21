@@ -19,7 +19,7 @@ It is expecting at least one arguement, which should be the source file. Any oth
 
 It is expecting exactly two arguements, the executable and the number of processes that should be created.
 
-[profile.sh](profile.sh) is responsible for compiling our program with different (key, value) macro pairs, running it with different number of processes and collecting our measurements.
+[profile.sh](profile.sh) is responsible for compiling our program with various (key, value) macro pairs, running it with different number of processes and collecting our measurements.
 
 It is expecting exactly two arguements, the source file and a [profiling description](#profiling-descriptions).
 
