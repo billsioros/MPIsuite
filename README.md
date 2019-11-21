@@ -45,7 +45,7 @@ Executing it with the --clean option removes any mpiP associated file, any job f
 
 [profile.sh](profile.sh) is responsible for compiling our program with different (key, value) macro pairs, running it with different number of processes and collecting our measurements.
 
-It is expecting exactly two arguements, the source file and a [profiling description script](#testing).
+It is expecting exactly two arguements, the source file and a [profiling description](#descriptions).
 
     echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap.c ./description.sh
 
@@ -64,9 +64,9 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 * **TIME_PATTERN** is a regular expression indicating the format of our timer's output.
 * **EDITOR** and **EDITOR_ARGS** are optional and are used by the profiler to open files in your favorite editor.
 
-## **Descriptions**
+## **Profiling Descriptions**
 
-The profiler is expecting a profiling description script, which must define:
+The profiler is expecting a profiling description, which must define:
 
 * a variable name **MACRO**, containing the name of the macro to be defined when running the profiler.
 * an array named **VALUES**, containing the values that the macro should receive.
