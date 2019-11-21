@@ -117,7 +117,7 @@ do
 done
 ```
 
-We can schedule the same executable multiple times with different numbers of trapezoids and processes as follows
+We can compile the executable with different numbers of trapezoids and schedule it with different number of processes in a single command as follows
 
     echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap.c ./description.sh
 
