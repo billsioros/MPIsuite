@@ -11,8 +11,6 @@ Let' s also assume that we have already developed an MPI / OpenMP / Hybrid progr
 
 ## **The Suite**
 
-[ui.sh](ui.sh) offers some basic user interface components and is being sourced by other files.
-
 [setup.sh](setup.sh) defines some aliases, set's up the console prompt and loads mpiP and OpenMP when sourced. You really only need loading mpiP and OpenMP. Everything else is entirely optional.
 
     . ./setup.sh
@@ -54,6 +52,8 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
     nTraps   , Processes, Time    , Speed Up       , Εfficiency
     1048576  , 1        , 0.000827, 1.0            , 1.0
     1048576  , 2        , 0.000982, 0.84215885947  , 0.421079429735
+
+[ui.sh](ui.sh) offers some basic user interface components and is being sourced by other files.
 
 [config.sh](config.sh) contains the configuration settings and is being sourced by other files.
 
