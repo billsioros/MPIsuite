@@ -5,30 +5,70 @@
 
 _Important Note: This project is in early development. Features are sparse and bugs may arise._
 
-Let' s assume we would like to estimate the integral from a to b of an equation f(x) using the trapezoidal rule.
-
-Let' s also assume that we have already developed an MPI / OpenMP / Hybrid program, named **mpi_trap.c** to do so and this program defines a macro named **nTraps**, which corresponds to the number of trapezoids that are going to be used in the calculation of the integral.
-
 ## **The Suite**
 
-[setup.sh](setup.sh) defines some aliases, set's up the console prompt and loads mpiP and OpenMP when sourced. You really only need loading mpiP and OpenMP. Everything else is entirely optional.
+[setup.sh](setup.sh) defines some aliases, set's up the console prompt and loads **mpiP** and **OpenMP** when sourced.
 
-    . ./setup.sh
+You really only need loading **mpiP** and **OpenMP**. Everything else is entirely optional.
 
 [compile.sh](compile.sh) is responsible for compiling the MPI, OpenMP or Hybrid supplied source file.
 
 It is expecting at least one arguement, which should be the source file. Any other arguements are grouped and form pairs of keys and values. Each pair represents a macro, named **key** with a value of **value**, that must be defined during the compilation of the program.
+
+[schedule.sh](schedule.sh) is responsible for generating a job and submitting it to the PBS queue.
+
+It is expecting exactly two arguements, the executable and the number of processes that should be created.
+
+[profile.sh](profile.sh) is responsible for compiling our program with different (key, value) macro pairs, running it with different number of processes and collecting our measurements.
+
+It is expecting exactly two arguements, the source file and a [profiling description](#profiling-descriptions).
+
+[ui.sh](ui.sh) offers some basic user interface components and is being sourced by the other files.
+
+[config.sh](config.sh) contains the [configuration settings](#configuration) and is being sourced by the other files.
+
+## **Profiling Descriptions**
+
+The profiler is expecting a profiling description, which must define:
+
+* a variable name **MACRO**, containing the name of the macro to be defined when running the profiler.
+* an array named **VALUES**, containing the values that the macro should receive.
+
+## **Configuration**
+
+* **COMPILER** indicates the script that should be used to compile the source file.
+* **SCHEDULER** indicates the script that should be used to schedule the executable's run.
+* **OUTPUT_ROOT** indicates the root directory. Our scheduling and profiling script create some files and directories. These files and directories are going to be saved under the root directory.
+* **USER_ID** is being used when querying the job queue to check if a job has finished.
+* **TIME_PATTERN** is a regular expression indicating the format of our timer's output.
+* **EDITOR** and **EDITOR_ARGS** are optional and are used by the profiler to open files in your favorite editor.
+
+## **Example**
+
+Let' s assume we would like to estimate the integral from a to b of an equation f(x) using the trapezoidal rule.
+
+Let' s also assume that we have already developed an MPI / OpenMP / Hybrid program, named **mpi_trap.c** to do so and this program defines a macro named **nTraps**, which corresponds to the number of trapezoids that are going to be used in the calculation of the integral.
+
+Firstly, we need to source [setup.sh](setup.sh) like so
+
+    . ./setup.sh
+
+### **Compiling**
+
+We now need to compile our source file using [compile.sh](compile.sh) as follows
 
     ./compile.sh mpi_trap.c nTraps 512
 
     [compile.sh] enable profiling: y
     [compile.sh] link OpenMP: n
 
+This results in the creation of an executable file named **mpi_trap.x**.
+
 Executing it with the --clean option deletes the executable.
 
-[schedule.sh](schedule.sh) is responsible for generating a job and submitting it to the PBS queue.
+### **Scheduling**
 
-It is expecting exactly two arguements, the executable and the number of processes that should be created.
+Scheduling the executable can be achieved like so
 
     ./schedule.sh mpi_trap.x 16
 
@@ -39,37 +79,26 @@ It is expecting exactly two arguements, the executable and the number of process
     12507.argo        myJob            argo081                  0 Q workq
     14524.argo        mpi_trap1_16_ar  argo059           00:00:00 R workq
 
+This results in the following files and directories to be generated
+
+    find ./out
+
+    ./out/
+    ./out/16
+    ./out/16/21_11_2019
+    ./out/16/21_11_2019/15_06_30
+    ./out/16/21_11_2019/15_06_30/mpi_trap1_16_argo059_job.stderr
+    ./out/16/21_11_2019/15_06_30/mpi_trap1_16_argo059_job.stdout
+
+* **ps** stands for the **number of processes**
+* **ns** stands for the **number of nodes**
+* **ppn** stands for the **number of processes per node**
+
 Executing it with the --clean option removes any mpiP associated file, any job file generated by it and removes any associated job from the queue.
 
-[profile.sh](profile.sh) is responsible for compiling our program with different (key, value) macro pairs, running it with different number of processes and collecting our measurements.
+### **Profiling**
 
-It is expecting exactly two arguements, the source file and a [profiling description](#profiling-descriptions).
-
-    echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap.c ./description.sh
-
-    head ./out/20_11_2019/23_47_53/results.csv
-
-    nTraps   , Processes, Time    , Speed Up       , Εfficiency
-    1048576  , 1        , 0.000827, 1.0            , 1.0
-    1048576  , 2        , 0.000982, 0.84215885947  , 0.421079429735
-
-[ui.sh](ui.sh) offers some basic user interface components and is being sourced by the other files.
-
-[config.sh](config.sh) contains the configuration settings and is being sourced by the other files.
-
-* **COMPILER** indicates the script that should be used to compile the source file.
-* **SCHEDULER** indicates the script that should be used to schedule the executable's run.
-* **OUTPUT_ROOT** indicates the root directory. Our scheduling and profiling script create some files and directories. These files and directories are going to be saved under the root directory.
-* **USER_ID** is being used when querying the job queue to check if a job has finished.
-* **TIME_PATTERN** is a regular expression indicating the format of our timer's output.
-* **EDITOR** and **EDITOR_ARGS** are optional and are used by the profiler to open files in your favorite editor.
-
-## **Profiling Descriptions**
-
-The profiler is expecting a profiling description, which must define:
-
-* a variable name **MACRO**, containing the name of the macro to be defined when running the profiler.
-* an array named **VALUES**, containing the values that the macro should receive.
+We firstly need to define a [profiling description](#profiling-descriptions) like so
 
 ```bash
 #!/bin/bash
@@ -83,4 +112,40 @@ do
     VALUES+=( "$(( 2 << ($power - 1) ))" )
 done
 ```
+
+We can schedule the same executable multiple times with different numbers of trapezoids and processes as follows
+
+    echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap.c ./description.sh
+
+The _echo_ command is used so that [compile.sh](compile.sh) runs non-interactively.
+
+This results in the following files and directories to be generated.
+
+    find ./out
+
+    ./out/
+    ./out/21_11_2019
+    ./out/21_11_2019/15_13_08
+    ./out/21_11_2019/15_13_08/67108864
+    ./out/21_11_2019/15_13_08/67108864/4
+    ./out/21_11_2019/15_13_08/67108864/4/mpi_trap1_4_argo059_job.stderr
+    ./out/21_11_2019/15_13_08/67108864/4/mpi_trap1_4_argo059_job.stdout
+    ...
+    ./out/21_11_2019/15_13_08/268435456/32
+    ./out/21_11_2019/15_13_08/268435456/32/mpi_trap1_32_argo059_job.stderr
+    ./out/21_11_2019/15_13_08/268435456/32/mpi_trap1_32_argo059_job.stdout
+    ./out/21_11_2019/15_13_08/268435456/16
+    ./out/21_11_2019/15_13_08/268435456/16/mpi_trap1_16_argo059_job.stderr
+    ./out/21_11_2019/15_13_08/268435456/16/mpi_trap1_16_argo059_job.stdout
+    ./out/21_11_2019/15_13_08/results.csv
+
+We can now check out our measurements
+
+    head -5 ./out/21_11_2019/15_13_08/results.csv
+
+    nTraps   , Processes, Time    , Speed Up       , Εfficiency
+    1048576  , 1        , 0.000925, 1.0            , 1.0
+    1048576  , 2        , 0.00082 , 1.12804878049  , 0.564024390245
+    1048576  , 4        , 0.000841, 1.09988109394  , 0.274970273485
+    1048576  , 8        , 0.001022, 0.905088062622 , 0.113136007828
 

@@ -22,7 +22,7 @@ function max
 
 if [ "$#" -lt 2 ]
 then
-    log "ERROR" "usage: $( basename "$0" ) [FILE] [TEST]"; exit 1
+    log "ERROR" "usage: $( basename "$0" ) [FILE] [DESCRIPTION]"; exit 1
 fi
 
 if [ ! -r "$1" ]
