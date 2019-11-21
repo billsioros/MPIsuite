@@ -51,7 +51,7 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
 Let' s assume we would like to estimate the integral from a to b of an equation f(x) using the trapezoidal rule.
 
-Let' s also assume that we have already developed an MPI / OpenMP / Hybrid program, named **mpi_trap.c** to do so and this program defines a macro named **nTraps**, which corresponds to the **number of trapezoids** that are going to be used in the calculation of the integral.
+Let' s also assume that we have already developed an MPI program, named **mpi_trap.c** to do so and this program defines a macro named **nTraps**, which corresponds to the **number of trapezoids** that are going to be used in the calculation of the integral.
 
 Firstly, we need to source [setup.sh](setup.sh) like so
 
