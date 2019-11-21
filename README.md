@@ -98,7 +98,7 @@ The following files and directories are generated
     ./out/16/21_11_2019/15_06_30/mpi_trap1_16_argo059_job.stderr
     ./out/16/21_11_2019/15_06_30/mpi_trap1_16_argo059_job.stdout
 
-Executing [schedule.sh](schedule.sh) with the _--clean_ option removes any mpiP associated file, any job associated file and removes any **USER_ID** associated job from the queue.
+Executing [schedule.sh](schedule.sh) with the _--clean_ option removes any mpiP and job associated files and removes any **USER_ID** associated job from the queue.
 
 ### **Profiling**
 
