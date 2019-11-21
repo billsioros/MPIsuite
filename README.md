@@ -31,13 +31,6 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
     git clone https://github.com/billsioros/mpi-openmp-task-automation
 
-## **Profiling Descriptions**
-
-[profile.sh](./profile.sh) is expecting a profiling description, which **must** define:
-
-* a string named **MACRO**, containing the name of the macro that should be defined by [compile.sh](./compile.sh).
-* an array named **VALUES**, containing the values that macro **MACRO** should receive in different runs.
-
 ## **Configuration**
 
 * **COMPILER** indicates the script that should be used to compile the source file.
@@ -46,6 +39,13 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 * **USER_ID** is being used when querying the job queue to check if a job is done running.
 * **TIME_PATTERN** is a regular expression indicating the format of our timer's output.
 * **EDITOR** and **EDITOR_ARGS** are optional and are used by the profiler to open files in your favorite editor.
+
+## **Profiling Descriptions**
+
+[profile.sh](./profile.sh) is expecting a profiling description, which **must** define:
+
+* a string named **MACRO**, containing the name of the macro that should be defined by [compile.sh](./compile.sh).
+* an array named **VALUES**, containing the values that macro **MACRO** should receive in different runs.
 
 ## **Example**
 
