@@ -7,7 +7,7 @@ _Important Note: This project is in early development. Features are sparse and b
 
 Let's assume we would like to estimate the integral from a to b of f(x) using the trapezoidal rule and n trapezoids.
 
-Let's also assume that we have already developed an MPI / OpenMP / Hybrid program to do so and this program defines a macro named **nTraps**, which corresponds to the number of trapezoids to be used in the calculation.
+Let's also assume that we have already developed an MPI / OpenMP / Hybrid program, named **mpi_trap.c** to do so and this program defines a macro named **nTraps**, which corresponds to the number of trapezoids to be used in the calculation.
 
 ## **The Suite**
 
@@ -21,7 +21,7 @@ Let's also assume that we have already developed an MPI / OpenMP / Hybrid progra
 
 It is expecting at least one arguement, which should be the source file. Any other arguements are grouped and form pairs of keys and values. Each pair represents a macro, named **key** with a value of **value**, that must be defined during the compilation of the program.
 
-    ./compile.sh mpi_trap1.c nTraps 512
+    ./compile.sh mpi_trap.c nTraps 512
 
     [compile.sh] enable profiling: y
     [compile.sh] link OpenMP: n
@@ -32,7 +32,7 @@ Executing it with the --clean option deletes the executable.
 
 It is expecting exactly two arguements, the executable and the number of processes that should be created.
 
-    ./schedule.sh mpi_trap1.x 16
+    ./schedule.sh mpi_trap.x 16
 
     [schedule.sh] name='mpi_trap1_16_argo059_job', id='14524.argo', ps=16, ns=2, ppn=8
 
@@ -47,7 +47,7 @@ Executing it with the --clean option removes any mpiP associated file, any job f
 
 It is expecting exactly two arguements, the source file and a [profiling description script](#testing).
 
-    echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap1.c ./description.sh
+    echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap.c ./description.sh
 
     head ./out/20_11_2019/23_47_53/results.csv
 
