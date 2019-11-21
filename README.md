@@ -13,7 +13,7 @@ You really only need loading **mpiP** and **OpenMP**. Everything else is entirel
 
 [compile.sh](compile.sh) is responsible for compiling the MPI, OpenMP or Hybrid supplied source file.
 
-It is expecting at least one arguement, which should be the source file. Any other arguements are grouped and form pairs of keys and values. Each pair represents a macro, named **key** with a value of **value**, that must be defined during the compilation of the program.
+It is expecting at least one arguement, which should be the source file. Any other arguements are grouped and form pairs of keys and values. Each pair represents a macro, named **key** with a value of **value**, that is going to be defined during the compilation of the program.
 
 [schedule.sh](schedule.sh) is responsible for generating a job and submitting it to the PBS queue.
 
