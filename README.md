@@ -17,7 +17,7 @@ It is expecting at least one arguement, which should be the source file. Any oth
 
 [schedule.sh](schedule.sh) is responsible for generating a job and submitting it to the PBS queue.
 
-It is expecting at least two arguements, the executable and the number of processes that should be created. A third arguement may be supplied specifying where to save the generated files. The supplied path is relative to **OUTPUT_ROOT** and its default value is *NUMBER_OF_PROCESSES/DATE/TIME*.
+It is expecting at least two arguements, the executable and the number of processes that should be created. A third arguement may be supplied, indicating where the generated files should be saved. The supplied path is relative to **OUTPUT_ROOT** and its default value is *NUMBER_OF_PROCESSES/DATE/TIME*.
 
 [profile.sh](profile.sh) is responsible for compiling our program with various (key, value) macro pairs, running it with different numbers of processes and collecting our measurements.
 
