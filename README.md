@@ -23,9 +23,9 @@ It is expecting exactly two arguements, the executable and the number of process
 
 It is expecting exactly two arguements, the source file and a [profiling description](#profiling-descriptions).
 
-[ui.sh](ui.sh) offers some basic user interface components and is being sourced by the other files.
-
 [config.sh](config.sh) contains the [configuration settings](#configuration) and is being sourced by the other files.
+
+[ui.sh](ui.sh) offers some basic user interface components and is being sourced by the other files.
 
 ## **Installation**
 
