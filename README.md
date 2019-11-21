@@ -3,7 +3,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-_Important note: This project is in early development, so features are sparse and bugs may arise._
+_Important Note: This project is in early development. Features are sparse and bugs may arise._
 
 Let's assume we would like to estimate the integral from a to b of f(x) using the trapezoidal rule and n trapezoids.
 
@@ -45,9 +45,9 @@ Executing it with the --clean option removes any mpiP associated file, any job f
 
 [profile.sh](profile.sh) is responsible for compiling our program with different (key, value) macro pairs, running it with different number of processes and collecting our measurements.
 
-It is expecting exactly two arguements, the source file and a [test script](#testing).
+It is expecting exactly two arguements, the source file and a [profiling description script](#testing).
 
-    echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap1.c ./test.sh
+    echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap1.c ./description.sh
 
     head ./out/20_11_2019/23_47_53/results.csv
 
@@ -64,9 +64,9 @@ It is expecting exactly two arguements, the source file and a [test script](#tes
 * **TIME_PATTERN** is a regular expression indicating the format of our timer's output.
 * **EDITOR** and **EDITOR_ARGS** are optional and are used by the profiler to open files in your favorite editor.
 
-## **Testing**
+## **Descriptions**
 
-The profiler is expecting a test script, which must define:
+The profiler is expecting a profiling description script, which must define:
 
 * a variable name **MACRO**, containing the name of the macro to be defined when running the profiler.
 * an array named **VALUES**, containing the values that the macro should receive.
