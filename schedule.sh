@@ -39,7 +39,7 @@ then
 
     if [[ ! -z "${enqueued// }" ]]
     then
-        log "MESSAGE" "Dequeuing jobs [$enqueued]"
+        log "MESSAGE" "Dequeuing jobs $enqueued"
 
         for job in $enqueued
         do
@@ -76,7 +76,7 @@ NODES="$(( $PROCESSES / $PPN))"
 if [[ "$NODES" -eq 0 ]]
 then
     NODES=1
-    args="$args –np $PROCESSES"
+    args="$args -np $PROCESSES"
 fi
 
 job="$( basename $exe )"
@@ -121,7 +121,7 @@ cd \$PBS_O_WORKDIR
 export OMP_NUM_THREADS=1
 
 # Run executable #
-mpirun $exe $args
+mpirun $args $exe
 "
 
 mkdir -p "${DIR}"
