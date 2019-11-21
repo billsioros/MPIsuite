@@ -143,7 +143,7 @@ The following files and directories are generated
     ./out/21_11_2019/15_13_08/268435456/16/mpi_trap1_16_argo059_job.stdout
     ./out/21_11_2019/15_13_08/results.csv
 
-We can now check out our measurements
+Let' s now see what our measurements look like
 
     head -5 ./out/21_11_2019/15_13_08/results.csv
 
