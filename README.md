@@ -27,6 +27,10 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
 [config.sh](config.sh) contains the [configuration settings](#configuration) and is being sourced by the other files.
 
+## **Installation**
+
+    git clone https://github.com/billsioros/mpi-openmp-task-automation
+
 ## **Profiling Descriptions**
 
 The profiler is expecting a profiling description, which must define:
@@ -148,4 +152,8 @@ We can now check out our measurements
     1048576  , 2        , 0.00082 , 1.12804878049  , 0.564024390245
     1048576  , 4        , 0.000841, 1.09988109394  , 0.274970273485
     1048576  , 8        , 0.001022, 0.905088062622 , 0.113136007828
+
+## **Licence**
+
+This project is licensed under the [MIT License](./LICENCE)
 
