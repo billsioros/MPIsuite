@@ -45,7 +45,7 @@ Executing it with the --clean option removes any mpiP associated file, any job f
 
 [profile.sh](profile.sh) is responsible for compiling our program with different (key, value) macro pairs, running it with different number of processes and collecting our measurements.
 
-It is expecting exactly two arguements, the source file and a [profiling description](#descriptions).
+It is expecting exactly two arguements, the source file and a [profiling description](#profiling-descriptions).
 
     echo -e "y\nn\ny\nn\ny\nn\ny\nn\ny\nn\n" | ./profile.sh ./mpi_trap.c ./description.sh
 
