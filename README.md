@@ -5,7 +5,7 @@
 
 _Important Note: This project is in early development. Features are sparse and bugs may arise._
 
-Let's assume we would like to estimate the integral from a to b of f(x) using the trapezoidal rule and n trapezoids.
+Let's assume we would like to estimate the integral from a to b of an equation f(x) using the trapezoidal rule.
 
 Let's also assume that we have already developed an MPI / OpenMP / Hybrid program, named **mpi_trap.c** to do so and this program defines a macro named **nTraps**, which corresponds to the number of trapezoids that are going to be used in the calculation of the integral.
 
