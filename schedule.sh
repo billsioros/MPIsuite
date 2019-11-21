@@ -52,7 +52,7 @@ fi
 
 if [ "$#" -lt 2 ]
 then
-    log "ERROR" "usage: $( basename "$0" ) [FILE] [PROCESSES]"; exit 1
+    log "ERROR" "usage: $( basename "$0" ) [FILE] [PROCESSES] [DIRECTORY]"; exit 1
 fi
 
 exe="$1"
