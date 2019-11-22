@@ -68,6 +68,8 @@ We now need to compile our source file using [compile.sh](compile.sh) as follows
 
 This results in the creation of an executable file named **mpi_trap1.x**, inside which the macro **nTraps** has been assigned the value **512**.
 
+**ATTENTION:** If your source code contains a _#define_ statement corresponding to the macro provided, the supplied value will be **overriden**. Remove the _#define_ statement or surround it with an _#ifndef MACRO ... #endif_ to resolve this issue.
+
 Executing [compile.sh](compile.sh) with the _--clean_ option deletes the executable.
 
 ### **Scheduling**
