@@ -66,7 +66,7 @@ We now need to compile our source file using [compile.sh](compile.sh) as follows
     [compile.sh] enable profiling: y
     [compile.sh] link OpenMP: n
 
-This results in the creation of an executable file named **mpi_trap1.x**.
+This results in the creation of an executable file named **mpi_trap1.x**, inside which the macro **nTraps** has been assigned the value 512.
 
 Executing [compile.sh](compile.sh) with the _--clean_ option deletes the executable.
 
