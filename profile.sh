@@ -109,7 +109,7 @@ done
 
 log "MESSAGE" "Saving measurements to '${OUTPUT_ROOT}/${DIR}/${RESULTS}'"
 
-echo "${MACRO}, Processes, Time, Speed Up, Εfficiency" > "${OUTPUT_ROOT}/${DIR}/${RESULTS}"
+echo "${MACRO}, Processes, Time, Speed Up, Efficiency" > "${OUTPUT_ROOT}/${DIR}/${RESULTS}"
 
 for value in "${VALUES[@]}"
 do
