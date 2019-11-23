@@ -27,9 +27,11 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
 [ui.sh](ui.sh) offers some basic user interface components and is being sourced by the other files.
 
-## **Installation**
+## **Installing & Updating**
 
     git clone https://github.com/billsioros/mpi-openmp-task-automation
+
+    git pull
 
 ## **Configuration**
 
