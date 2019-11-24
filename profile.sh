@@ -63,17 +63,17 @@ do
         then
             exit 1
         fi
+
+        while true
+        do
+            running="$( qstat | grep "$USER_ID" )"
+
+            if [ -z "$running" ]
+            then
+                break
+            fi
+        done
     done
-done
-
-while true
-do
-    running="$( qstat | grep "$USER_ID" )"
-
-    if [ -z "$running" ]
-    then
-        break
-    fi
 done
 
 find . -name "*job.sh" -delete
