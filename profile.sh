@@ -78,7 +78,14 @@ done
 
 find . -name "*job.sh" -delete
 
-mkdir -p "${OUTPUT_ROOT}/${DIR}/mpiP"; mv *.mpiP  "${OUTPUT_ROOT}/${DIR}/mpiP"
+mpiP="$( find . -name "*.mpiP" -maxdepth 1 | tr '\n' ' ')"
+
+if [[ ! -z "${mpiP// }" ]]
+then
+    mkdir -p "${OUTPUT_ROOT}/${DIR}/mpiP"
+
+    mv -t "${OUTPUT_ROOT}/${DIR}/mpiP" $mpiP
+fi
 
 declare -A measurements
 
