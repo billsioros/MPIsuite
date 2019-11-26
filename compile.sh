@@ -10,7 +10,7 @@ fi
 
 if [ "$#" -lt 1 ]
 then
-    log "ERROR" "usage: $( basename "$0" ) [FILE] [MACROS]..."; exit 1
+    log "ERROR" "usage: $( basename "$0" ) [SOURCE] [MACROS]..."; exit 1
 fi
 
 if [ ! -r "$1" ]
