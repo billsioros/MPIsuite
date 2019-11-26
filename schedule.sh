@@ -128,6 +128,8 @@ mkdir -p "${DIR}"
 
 echo "$JOB" > "${job}.sh"
 
+export MPIP="-f ${DIR}"
+
 id="$( qsub "${job}.sh" )"
 
 echo
