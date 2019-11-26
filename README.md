@@ -147,7 +147,7 @@ The following files and directories are generated
     ./out/21_11_2019/15_13_08/268435456/16/mpi_trap1_16_argo059_job.stdout
     ./out/21_11_2019/15_13_08/results.csv
 
-Let' s now see what our measurements look like
+Here is how our measurements look like
 
     head -5 ./out/21_11_2019/15_13_08/results.csv
 
@@ -159,5 +159,5 @@ Let' s now see what our measurements look like
 
 ## **Licence**
 
-This project is licensed under the [MIT License](./LICENCE)
+This project is licensed under the [MIT License](./LICENCE).
 
