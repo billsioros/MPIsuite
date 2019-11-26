@@ -79,6 +79,11 @@ done
 find . -name "*job.sh" -maxdepth 1 -delete
 find . -name "*.x"     -maxdepth 1 -delete
 
+for file in $(find "${OUTPUT_ROOT}" -name "*.mpiP")
+do
+    mv "$file" "$(dirname "$file")/mpiP.log"
+done
+
 declare -A measurements
 
 for value in "${VALUES[@]}"
