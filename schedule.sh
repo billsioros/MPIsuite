@@ -52,7 +52,7 @@ fi
 
 if [ "$#" -lt 2 ]
 then
-    log "ERROR" "usage: $( basename "$0" ) [EXECUTABLE] [PROCESSES] [DIRECTORY]"; exit 1
+    log "ERROR" "usage: $( basename "$0" ) [EXECUTABLE] [PROCESSES]"; exit 1
 fi
 
 exe="$1"
@@ -83,9 +83,9 @@ job="$( basename $exe )"
 job="${job%.*}"
 job="${job}_${PROCESSES}_${USER_ID}_job"
 
-if [ "$#" -gt 2 ]
+if [[ ! -z "${SCHEDULE_DIRECTORY}" ]]
 then
-    DIR="${OUTPUT_ROOT}/$3"
+    DIR="${OUTPUT_ROOT}/${SCHEDULE_DIRECTORY}"
 else
     DIR="${OUTPUT_ROOT}/${PROCESSES}/$( date +"%d_%m_%Y" )/$( date +"%H_%M_%S" )"
 fi

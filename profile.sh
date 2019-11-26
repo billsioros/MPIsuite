@@ -59,7 +59,9 @@ do
 
     for ((processes = 1; processes <= 64; processes *= 2))
     do
-        if ! "$SCHEDULER" "$exe" "$processes" "${DIR}/${value}/${processes}"
+        export SCHEDULE_DIRECTORY="${DIR}/${value}/${processes}"
+
+        if ! "$SCHEDULER" "$exe" "$processes"
         then
             exit 1
         fi
