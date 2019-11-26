@@ -22,7 +22,7 @@ function max
 
 if [ "$#" -lt 2 ]
 then
-    log "ERROR" "usage: $( basename "$0" ) [FILE] [DESCRIPTION]"; exit 1
+    log "ERROR" "usage: $( basename "$0" ) [SOURCE] [DESCRIPTION]"; exit 1
 fi
 
 if [ ! -r "$1" ]
@@ -63,29 +63,21 @@ do
         then
             exit 1
         fi
+    done
 
-        while true
-        do
-            running="$( qstat | grep "$USER_ID" )"
+    while true
+    do
+        running="$( qstat | grep "$USER_ID" )"
 
-            if [ -z "$running" ]
-            then
-                break
-            fi
-        done
+        if [ -z "$running" ]
+        then
+            break
+        fi
     done
 done
 
-find . -name "*job.sh" -delete
-
-mpiP="$( find . -name "*.mpiP" -maxdepth 1 | tr '\n' ' ')"
-
-if [[ ! -z "${mpiP// }" ]]
-then
-    mkdir -p "${OUTPUT_ROOT}/${DIR}/mpiP"
-
-    mv -t "${OUTPUT_ROOT}/${DIR}/mpiP" $mpiP
-fi
+find . -name "*job.sh" -maxdepth 1 -delete
+find . -name "*.x"     -maxdepth 1 -delete
 
 declare -A measurements
 
