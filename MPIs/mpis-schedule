@@ -1,10 +1,9 @@
 #!/bin/bash
 
-. ui.sh
-. config.sh
+. "${MPIS_UI}"
 
 
-REQUIRED=( OUTPUT_ROOT USER_ID )
+REQUIRED=( MPIS_OUTPUT_ROOT MPIS_USER_ID MPIS_STDOUT_EXTENSION MPIS_STDERR_EXTENSION )
 
 for value in "${REQUIRED[@]}"
 do
@@ -30,12 +29,13 @@ function isPowerOfTwo
 
 if [[ "$*" == *--clean* ]]
 then
-    rm -rfv "$OUTPUT_ROOT"
+    rm -rfv "$MPIS_OUTPUT_ROOT"
 
     find . -name "*.mpiP"  -delete
     find . -name "*job.sh" -delete
+    find . -name "core.*"  -delete
 
-    enqueued="$( qstat | grep "$USER_ID" | grep -oh "^[0-9]*.argo" | tr '\n' ' ' )"
+    enqueued="$( qstat | grep "$MPIS_USER_ID" | grep -oh "^[0-9]*.argo" | tr '\n' ' ' )"
 
     if [[ ! -z "${enqueued// }" ]]
     then
@@ -81,13 +81,13 @@ fi
 
 job="$( basename $exe )"
 job="${job%.*}"
-job="${job}_${PROCESSES}_${USER_ID}_job"
+job="${job}_${PROCESSES}_${MPIS_USER_ID}_job"
 
 if [[ ! -z "${SCHEDULE_DIRECTORY}" ]]
 then
-    DIR="${OUTPUT_ROOT}/${SCHEDULE_DIRECTORY}"
+    DIR="${MPIS_OUTPUT_ROOT}/${SCHEDULE_DIRECTORY}"
 else
-    DIR="${OUTPUT_ROOT}/${PROCESSES}/$( date +"%d_%m_%Y" )/$( date +"%H_%M_%S" )"
+    DIR="${MPIS_OUTPUT_ROOT}/${PROCESSES}/$( date +"%d_%m_%Y" )/$( date +"%H_%M_%S" )"
 fi
 
 JOB=\
@@ -109,8 +109,8 @@ JOB=\
 #PBS -N $job
 
 # Streams #
-#PBS -o ${DIR}/${job}.stdout
-#PBS -e ${DIR}/${job}.stderr
+#PBS -o ${DIR}/${job}.${MPIS_STDOUT_EXTENSION}
+#PBS -e ${DIR}/${job}.${MPIS_STDERR_EXTENSION}
 
 #Change Working directory to SUBMIT directory
 cd \$PBS_O_WORKDIR

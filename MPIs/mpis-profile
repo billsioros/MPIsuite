@@ -1,10 +1,9 @@
 #!/bin/bash
 
-. ui.sh
-. config.sh
+. "${MPIS_UI}"
 
 
-REQUIRED=( OUTPUT_ROOT USER_ID COMPILER SCHEDULER MACRO VALUES TIME_PATTERN )
+REQUIRED=( MPIS_OUTPUT_ROOT MPIS_STDOUT_EXTENSION MPIS_STDERR_EXTENSION MPIS_USER_ID MPIS_COMPILER MPIS_SCHEDULER MACRO VALUES TIME_PATTERN )
 
 RESULTS="results.csv"
 
@@ -52,7 +51,7 @@ DIR="$( date +"%d_%m_%Y" )/$( date +"%H_%M_%S" )"
 
 for value in "${VALUES[@]}"
 do
-    if ! "$COMPILER" "$1" "$MACRO" "$value"
+    if ! "$MPIS_COMPILER" "$1" "$MACRO" "$value"
     then
         exit 1
     fi
@@ -61,7 +60,7 @@ do
     do
         export SCHEDULE_DIRECTORY="${DIR}/${value}/${processes}"
 
-        if ! "$SCHEDULER" "$exe" "$processes"
+        if ! "$MPIS_SCHEDULER" "$exe" "$processes"
         then
             exit 1
         fi
@@ -69,7 +68,7 @@ do
 
     while true
     do
-        running="$( qstat | grep "$USER_ID" )"
+        running="$( qstat | grep "$MPIS_USER_ID" )"
 
         if [ -z "$running" ]
         then
@@ -78,10 +77,10 @@ do
     done
 done
 
-find . -name "*job.sh" -maxdepth 1 -delete
-find . -name "*.x"     -maxdepth 1 -delete
+find . -maxdepth 1 -name "*job.sh" -delete
+find . -maxdepth 1 -name "*.x"     -delete
 
-for file in $(find "${OUTPUT_ROOT}" -name "*.mpiP")
+for file in $(find "${MPIS_OUTPUT_ROOT}" -name "*.mpiP")
 do
     mv "$file" "$(dirname "$file")/mpiP.log"
 done
@@ -92,7 +91,7 @@ for value in "${VALUES[@]}"
 do
     for ((processes = 1; processes <= 64; processes *= 2))
     do
-        for file in $( find "${OUTPUT_ROOT}/${DIR}/${value}/${processes}" -name "*.stdout" | tr '\n' ' ' )
+        for file in $( find "${MPIS_OUTPUT_ROOT}/${DIR}/${value}/${processes}" -name "*.${MPIS_STDOUT_EXTENSION}" | tr '\n' ' ' )
         do
             values="$( cat "$file" | grep -Po "$TIME_PATTERN" | tr '\n' ' ' )"
 
@@ -100,9 +99,9 @@ do
             then
                 log "WARNING" "No matches for '${TIME_PATTERN}' in '$file'"
 
-                if [[ ! -z "${EDITOR// }" ]] && [[ "$( command -v "$EDITOR" )" ]]
+                if [[ ! -z "${MPIS_EDITOR// }" ]] && [[ "$( command -v "$MPIS_EDITOR" )" ]]
                 then
-                    "$EDITOR" "$EDITOR_ARGS" "$file" "${file%.*}.stderr"
+                    "$MPIS_EDITOR" "$MPIS_EDITOR_ARGS" "$file" "${file%%.*}.${MPIS_STDERR_EXTENSION}"
                 fi
 
                 measurements["$value, $processes"]="-1"
@@ -113,23 +112,29 @@ do
     done
 done
 
-log "MESSAGE" "Saving measurements to '${OUTPUT_ROOT}/${DIR}/${RESULTS}'"
+log "MESSAGE" "Saving measurements to '${MPIS_OUTPUT_ROOT}/${DIR}/${RESULTS}'"
 
-echo "${MACRO}, Processes, Time, Speed Up, Efficiency" > "${OUTPUT_ROOT}/${DIR}/${RESULTS}"
+echo "${MACRO}, Processes, Time, Speed Up, Efficiency" > "${MPIS_OUTPUT_ROOT}/${DIR}/${RESULTS}"
 
 for value in "${VALUES[@]}"
 do
     for ((processes = 1; processes <= 64; processes *= 2))
     do
-        speedup="$( python -c "print(${measurements[$value, 1]} / ${measurements[$value, $processes]})" )"
+        speedup="$processes"
+
+        if [[ "${measurements[$value, $processes]}" -gt 0 ]]
+        then
+            speedup="$( python -c "print(${measurements[$value, 1]} / ${measurements[$value, $processes]})" )"
+        fi
+
         efficiency="$( python -c "print(${speedup} / ${processes})" )"
 
         echo "${value}, ${processes}, ${measurements[$value, $processes]}, ${speedup}, ${efficiency}"
     done
-done >> "${OUTPUT_ROOT}/${DIR}/${RESULTS}"
+done >> "${MPIS_OUTPUT_ROOT}/${DIR}/${RESULTS}"
 
-if [[ ! -z "${EDITOR// }" ]] && [[ "$( command -v "$EDITOR" )" ]]
+if [[ ! -z "${MPIS_EDITOR// }" ]] && [[ "$( command -v "$MPIS_EDITOR" )" ]]
 then
-    "$EDITOR" "$EDITOR_ARGS" "${OUTPUT_ROOT}/${DIR}/${RESULTS}"
+    "$MPIS_EDITOR" "$MPIS_EDITOR_ARGS" "${MPIS_OUTPUT_ROOT}/${DIR}/${RESULTS}"
 fi
 

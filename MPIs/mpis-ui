@@ -2,7 +2,7 @@
 
 function hightlight
 {
-    if [ "$1" == ERROR ]
+    if [ "$1" == "ERROR" ]
     then
         color=196
     elif [ "$1" == "WARNING" ]

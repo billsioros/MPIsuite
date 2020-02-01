@@ -1,23 +1,46 @@
 #!/bin/bash
 
-# Setting up aliases
+. MPIs/mpis-ui
 
-alias rm='rm -riv'
-alias mv='mv -iv'
-alias cp='cp -riv'
-alias lf='ls -bgoFcGh --group-directories-first'
-alias start='xdg-open'
-alias memory='ps axch -o cmd:15,%mem --sort=-%mem | head'
+MPIS_DIR="MPIs"
+BASHRC_PATH=".bashrc"
+MPISRC_PATH=".mpisrc"
 
-# Setting up the console's prompt
+mpirc_contents=\
+"""
+export MPIS_DIR=~/bin/${MPIS_DIR}
+export PATH=~/bin/$MPIS_DIR:\$PATH
 
-PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
-PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \W\a\]$PS1"
+. ~/bin/${MPIS_DIR}/.mpis.config
 
-# Setting up MPI
-
-module load openmpi3
 module load mpiP
+module load openmpi3
+"""
 
-clear
+bashrc_contents=\
+"""
+# setting up MPIs
+if [ -f ~/${MPISRC_PATH} ]; then
+    . ~/${MPISRC_PATH}
+fi
+# setting up MPIs
+"""
 
+log "MESSAGE" "Creating '~/${MPISRC_PATH}'"
+
+if [[ ! -f ~/"$MPISRC_PATH" ]] || confirm "WARNING" "Would you like to overwrite ${MPIRC_PATH}"
+then
+    echo -n "$mpirc_contents" > ~/"$MPISRC_PATH"
+fi
+
+log "MESSAGE" "Adding MPIs to '~/${BASHRC_PATH}'"
+
+echo -n "$bashrc_contents" >> ~/"$BASHRC_PATH"
+
+log "MESSAGE" "Installing MPIs in '~/bin/${MPIS_DIR}'"
+
+mkdir -p ~/bin/"${MPIS_DIR}"; cp -r ./"${MPIS_DIR}" ~/bin/
+
+log "MESSAGE" "Done"
+
+log "MESSAGE" "Consider re-opening the terminal"
