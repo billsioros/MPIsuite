@@ -1,5 +1,5 @@
 
-# MPI / OpenMP Task Automation
+# **MPIs** - MPI / OpenMP Task Automation
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -24,6 +24,8 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
     git clone https://github.com/billsioros/mpi-openmp-task-automation
 
     ./setup.sh
+
+Uninstalling MPIs can be achieved simply by running [_setup.sh_](setup.sh) with **--uninstall** in its arguments.
 
 ## **Configuration**
 
