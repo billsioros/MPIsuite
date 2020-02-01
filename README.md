@@ -21,8 +21,6 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
 ## **Installation**
 
-    git clone https://github.com/billsioros/mpi-openmp-task-automation
-
     chmod +x setup.sh
 
     ./setup.sh
