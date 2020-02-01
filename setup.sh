@@ -68,4 +68,9 @@ log "MESSAGE" "Installing MPIs in '~/bin/${MPIS_DIR}'"
 
 mkdir -p ~/bin/"${MPIS_DIR}"; cp -r ./"${MPIS_DIR}" ~/bin/
 
+for file in $(find ~/bin/"${MPIS_DIR}" -mindepth 1)
+do
+    chmod +x "$file"
+done
+
 log "MESSAGE" "Restart the terminal"

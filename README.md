@@ -23,6 +23,8 @@ It is expecting exactly two arguements, the source file and a [profiling descrip
 
     git clone https://github.com/billsioros/mpi-openmp-task-automation
 
+    chmod +x setup.sh
+
     ./setup.sh
 
 Uninstalling **MPIs** can be achieved simply by running
