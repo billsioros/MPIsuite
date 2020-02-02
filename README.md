@@ -46,7 +46,7 @@ You are more than welcome to check _~/.mpirc_ out, for additional configuration 
 * an array named **VALUES**, containing the values that macro **MACRO** should receive in different runs.
 
 You can optionally define **MPIS_ENABLE_PROFILING** and/or **MPIS_LINK_OPENMP**,
-in order to bypass confirmation on the corresponding compilation step.
+in order to bypass confirmation on the corresponding compilation step. These can be globally defined, as well, in _~/.mpirc_.
 
 ## **Example**
 
