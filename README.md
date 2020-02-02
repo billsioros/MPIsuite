@@ -1,5 +1,5 @@
 
-# **MPIs** - MPI / OpenMP Task Automation
+# **MPIsuite** - MPI / OpenMP Task Automation
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
