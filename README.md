@@ -35,7 +35,7 @@ Uninstalling **MPIs** can be achieved simply by running
 * **MPIS_USER_ID** is being used when querying the job queue to check if a job is done running.
 * **MPIS_EDITOR** and **MPIS_EDITOR_ARGS** are optional and are used by the profiler to open files in your favorite editor.
 
-You are more than welcome to check _~/.mpirc_ out, for additional configuration options.
+You are more than welcome to check _~/.mpisrc_ out, for additional configuration options.
 
 ## **Profiling Descriptions**
 
@@ -46,7 +46,7 @@ You are more than welcome to check _~/.mpirc_ out, for additional configuration 
 * an array named **VALUES**, containing the values that macro **MACRO** should receive in different runs.
 
 You can optionally define **MPIS_ENABLE_PROFILING** and/or **MPIS_LINK_OPENMP**,
-in order to bypass confirmation on the corresponding compilation step. These can be globally defined, as well, in _~/.mpirc_.
+in order to bypass confirmation on the corresponding compilation step. These can be globally defined, as well, in _~/.mpisrc_.
 
 ## **Example**
 
