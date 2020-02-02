@@ -35,7 +35,7 @@ Uninstalling **MPIs** can be achieved simply by running
 * **MPIS_USER_ID** is being used when querying the job queue to check if a job is done running.
 * **MPIS_EDITOR** and **MPIS_EDITOR_ARGS** are optional and are used by the profiler to open files in your favorite editor.
 
-You are more than welcome to check _~/.mpisrc_ out, for additional configuration options.
+You are more than welcome to check _~/.mpisrc_ out, for additional configuration settings.
 
 ## **Profiling Descriptions**
 
