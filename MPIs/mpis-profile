@@ -120,12 +120,7 @@ for value in "${VALUES[@]}"
 do
     for ((processes = 1; processes <= 64; processes *= 2))
     do
-        speedup="$processes"
-
-        if [[ "${measurements[$value, $processes]}" -gt 0 ]]
-        then
-            speedup="$( python -c "print(${measurements[$value, 1]} / ${measurements[$value, $processes]})" )"
-        fi
+        speedup="$( python -c "print(${measurements[$value, 1]} / ${measurements[$value, $processes]})" )"
 
         efficiency="$( python -c "print(${speedup} / ${processes})" )"
 
@@ -137,4 +132,3 @@ if [[ ! -z "${MPIS_EDITOR// }" ]] && [[ "$( command -v "$MPIS_EDITOR" )" ]]
 then
     "$MPIS_EDITOR" "$MPIS_EDITOR_ARGS" "${MPIS_OUTPUT_ROOT}/${DIR}/${RESULTS}"
 fi
-
