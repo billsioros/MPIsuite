@@ -3,7 +3,7 @@
 . "${MPIS_UI}"
 
 
-REQUIRED=( MPIS_OUTPUT_ROOT MPIS_STDOUT_EXTENSION MPIS_STDERR_EXTENSION MPIS_USER_ID MPIS_COMPILER MPIS_SCHEDULER MACRO VALUES TIME_PATTERN )
+REQUIRED=( MPIS_OUTPUT_ROOT MPIS_STDOUT_EXTENSION MPIS_STDERR_EXTENSION MPIS_USER_ID MPIS_COMPILER MPIS_SCHEDULER MACRO VALUES PROCESSES THREADS_PER_PROCESS TIME_PATTERN )
 
 RESULTS="results.csv"
 
@@ -56,11 +56,11 @@ do
         exit 1
     fi
 
-    for ((processes = 1; processes <= 64; processes *= 2))
+    for processes in "${PROCESSES[@]}"
     do
         export SCHEDULE_DIRECTORY="${DIR}/${value}/${processes}"
 
-        if ! "$MPIS_SCHEDULER" "$exe" "$processes"
+        if ! "$MPIS_SCHEDULER" "$exe" "$processes" "$THREADS_PER_PROCESS"
         then
             exit 1
         fi
@@ -89,9 +89,9 @@ declare -A measurements
 
 for value in "${VALUES[@]}"
 do
-    for ((processes = 1; processes <= 64; processes *= 2))
+    for processes in "${PROCESSES[@]}"
     do
-        for file in $( find "${MPIS_OUTPUT_ROOT}/${DIR}/${value}/${processes}" -name "*.${MPIS_STDOUT_EXTENSION}" | tr '\n' ' ' )
+        for file in $( find "${MPIS_OUTPUT_ROOT}/${DIR}/${value}/${processes}" -name "*.${MPIS_STDERR_EXTENSION}" | tr '\n' ' ' )
         do
             values="$( cat "$file" | grep -Po "$TIME_PATTERN" | tr '\n' ' ' )"
 
@@ -132,3 +132,4 @@ if [[ ! -z "${MPIS_EDITOR// }" ]] && [[ "$( command -v "$MPIS_EDITOR" )" ]]
 then
     "$MPIS_EDITOR" "$MPIS_EDITOR_ARGS" "${MPIS_OUTPUT_ROOT}/${DIR}/${RESULTS}"
 fi
+

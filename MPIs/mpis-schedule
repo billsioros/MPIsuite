@@ -3,7 +3,7 @@
 . "${MPIS_UI}"
 
 
-REQUIRED=( MPIS_OUTPUT_ROOT MPIS_USER_ID MPIS_STDOUT_EXTENSION MPIS_STDERR_EXTENSION )
+REQUIRED=( MPIS_OUTPUT_ROOT MPIS_USER_ID MPIS_STDOUT_EXTENSION MPIS_STDERR_EXTENSION MPIS_CORES)
 
 for value in "${REQUIRED[@]}"
 do
@@ -12,20 +12,6 @@ do
         log "ERROR" "'$value' has not been specified"; exit 1
     fi
 done
-
-PPN=8
-
-function isPowerOfTwo
-{
-    isPowerOfTwo_py="import math; print(false if $1 == 0 else (math.ceil(math.log($1, 2)) == math.floor(math.log($1, 2))))"
-
-    if [ "$( python -c "$isPowerOfTwo_py" )" == "True" ]
-    then
-        return 0
-    else
-        return 1
-    fi
-}
 
 if [[ "$*" == *--clean* ]]
 then
@@ -50,9 +36,9 @@ then
     exit 0
 fi
 
-if [ "$#" -lt 2 ]
+if [ "$#" -lt 3 ]
 then
-    log "ERROR" "usage: $( basename "$0" ) [EXECUTABLE] [PROCESSES]"; exit 1
+    log "ERROR" "usage: $( basename "$0" ) [EXECUTABLE] [PROCESSES] [THREADS_PER_PROCESS]"; exit 1
 fi
 
 exe="$1"
@@ -62,26 +48,44 @@ then
     log "ERROR" "'$1' is not executable"; exit 1
 fi
 
-if ! [[ "$2" =~ ^[1-9][0-9]*$ ]] || ! isPowerOfTwo "$2"
+if ! [[ "$2" =~ ^[1-9][0-9]*$ ]]
 then
-    log "ERROR" "The number of processes must be a power of 2"; exit 1
+    log "ERROR" "The number of processes must be an integer"; exit 1
+fi
+
+PROCESSES="$2"
+
+if ! [[ "$3" =~ ^[1-9][0-9]*$ ]]
+then
+    log "ERROR" "The number of threads must be an integer"; exit 1
+fi
+
+THREADS_PER_PROCESS="$3"
+
+PPN="$(( $MPIS_CORES / $THREADS_PER_PROCESS ))"
+
+if [ "$PPN" -le 0 ]
+then
+    log "ERROR" "The number of threads is greater than the maximum number of processes per node"; exit 1
 fi
 
 args="--mca mca_component_show_load_errors 0"
 
-PROCESSES="$2"
-
-NODES="$(( $PROCESSES / $PPN))"
-
-if [[ "$NODES" -eq 0 ]]
+if [ "$(( $PROCESSES % $PPN ))" -eq 0 ]
 then
-    NODES=1
+    NODES="$(( $PROCESSES / $PPN ))"
+else
+    NODES="$(( ( $PROCESSES / $PPN ) + 1 ))"
+fi
+
+if [[ "$(( $PROCESSES * $THREADS_PER_PROCESS ))" -lt "$PPN" ]]
+then
     args="$args -np $PROCESSES"
 fi
 
 job="$( basename $exe )"
 job="${job%.*}"
-job="${job}_${PROCESSES}_${MPIS_USER_ID}_job"
+job="${job}_${PROCESSES}_${THREADS_PER_PROCESS}_${MPIS_USER_ID}_job"
 
 if [[ ! -z "${SCHEDULE_DIRECTORY}" ]]
 then
@@ -118,7 +122,7 @@ cd \$PBS_O_WORKDIR
 #OpenMP Threads #
 # OMP_NUM_THREADS * ppn should be max 8 (the total number of node cores= 8).
 # To use OpenMPI remember to include -fopenmp in compiler flags in order to activate OpenMP directives.
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=$THREADS_PER_PROCESS
 
 # Run executable #
 mpirun $args $exe
@@ -136,10 +140,12 @@ echo
 
 if [[ ! -z "${id// }" ]]
 then
-    log "MESSAGE" "name='${job}', id='${id}', ps=${PROCESSES}, ns=${NODES}, ppn=${PPN}"
+    log "MESSAGE" "name='${job}', id='${id}', ps=${PROCESSES}, ts=${THREADS_PER_PROCESS}, ns=${NODES}, ppn=${PPN}"
 
-    echo -e "\n$( qstat )\n"
+    if [[ -z "${SCHEDULE_DIRECTORY}" ]]
+    then
+        echo -e "\n$( qstat )\n"
+    fi
 else
     log "ERROR" "Scheduling job '$job' has failed"
 fi
-

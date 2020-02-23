@@ -31,6 +31,8 @@ export MPIS_OUTPUT_ROOT=\"out\"
 export MPIS_STDOUT_EXTENSION=\"stdout.log\"
 export MPIS_STDERR_EXTENSION=\"stderr.log\"
 
+export MPIS_CORES=8
+
 export MPIS_USER_ID="$( whoami )"
 
 export MPIS_EDITOR=\"code\"
